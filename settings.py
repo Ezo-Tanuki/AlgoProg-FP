@@ -5,9 +5,11 @@ class Settings():
 
         self.columns = self.rows = 20
         
-        self.cellsize = min(40, min(self.screen_width, self.screen_height) / (20-1))
-        self.padding_x = (self.screen_width - self.rows * self.cellsize) / 2
-        self.padding_y = (self.screen_width - self.rows * self.cellsize) / 2
+        self.cellsize = min(40, min(self.screen_width, self.screen_height) / (self.columns+1))
+        self.padding_x = (self.screen_width - self.rows * (self.cellsize)) / 2
+        self.padding_y = (self.screen_width - self.columns * (self.cellsize)) / 2
 
+        self.dot_radius = 3
+        
         self.bg_color = (255, 255, 255) #white
         self.dot_color = (0, 0, 0) #black
