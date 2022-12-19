@@ -24,6 +24,6 @@ def main():
         gf.checkEvents(settings, screen, cells, players, current_player)
         
         
-
+        
 if __name__ == "__main__":
     main()
