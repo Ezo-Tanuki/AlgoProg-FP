@@ -5,7 +5,6 @@ def update_screen(settings, screen, cells):
     screen.fill(settings.bg_color)
     draw_dot(settings, screen)
     updateCells(screen, cells)
-    # test(screen, cells)
 
     pygame.display.flip()
 
@@ -22,20 +21,43 @@ def showTriggeredCell(cells, pos):
         if pos and cell.rect.collidepoint(pos):
             print(cell.rect)
 
+def checkLineObjectTriggered(cell, pos):
+    for index, line in enumerate(cell.line_object):
+        if line.collidepoint(pos):
+            return index
+    
+    return -1
+
 def updateCells(screen, cells):
     for cell in cells:
-        cell.updateLines(screen)
-
-def checkMultipleLineClick(cells, index, pos):
-    collision = 0
-    for line_object in cells[index].line_object:
-        if line_object.collidepoint(pos):
-            collision += 1;
-        if collision > 1:
-            return True
+        # cell.updateLines(screen)
+        cell.displayLineObject(screen)
     
-    return False
+    return None
+
+def checkLineSelected(cells, pos, players, current_player):
+    triggered = False
+    for cell in cells:
+        index = checkLineObjectTriggered(cell, pos)
+        if index != -1:
+            triggered = True
+            print("y")
+            cell.line[index] == current_player[0].color
+    
+    if triggered:
+        current_player[0] = players[(current_player[1]+1)%len(players)]
+        current_player[1] += 1
 
 
-# def test(screen, cells):
-#     for 
+def checkEvents(settings, screen, cells, players, current_player):
+
+    for event in pygame.event.get():
+            if event.type == pygame.QUIT: #close window if 'x' is clicked
+                pygame.quit()
+                break
+
+            if event.type == pygame.MOUSEBUTTONDOWN: #save mouse position in an event of mouse click
+                mousePos = event.pos
+                checkLineSelected(cells, mousePos, players, current_player)
+
+                showTriggeredCell(cells, mousePos)
