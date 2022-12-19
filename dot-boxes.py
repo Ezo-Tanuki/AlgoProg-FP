@@ -2,7 +2,7 @@ import pygame
 import sys
 import game_function as gf
 
-
+from player import Player
 from cell import Cell
 from settings import Settings
 
@@ -14,25 +14,16 @@ def main():
     settings = Settings()
     cells = [Cell(row, column) for row in range(settings.rows)
         for column in range(settings.columns)] #render cell object
-    
+    players = [Player((255, 0, 0)), Player((0, 0, 255))]
+    current_player = [players[0], 0]
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
     run = True
     print(cells[0].rect)
     while run:
         gf.update_screen(settings, screen, cells)
+        gf.checkEvents(settings, screen, cells, players, current_player)
         
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: #close window if 'x' is clicked
-                pygame.quit()
-                run = False
-                break
 
-            if event.type == pygame.MOUSEBUTTONDOWN: #save mouse position in an event of mouse click
-                mousePos = event.pos
-                gf.showTriggeredCell(cells, mousePos)
-
-        
-    
-
-main()
+if __name__ == "__main__":
+    main()
