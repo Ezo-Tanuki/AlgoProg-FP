@@ -40,4 +40,15 @@ class Cell():
         for side in self.line_object:
             if side:
                 pygame.draw.rect(screen, (0, 0, 0), side)
+    
+    def checkClaimed(self, current_player):
+        for line in self.line:
+            if not line:
+                return
+            
+        self.claim = current_player
+
+    def drawCell(self, screen):
+        if self.claim:
+            pygame.draw.rect(screen, self.claim[0].color, self.rect)
                 
