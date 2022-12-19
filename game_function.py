@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 def update_screen(settings, screen, cells):
     
@@ -23,27 +24,34 @@ def showTriggeredCell(cells, pos):
 
 def checkLineObjectTriggered(cell, pos):
     for index, line in enumerate(cell.line_object):
-        if line.collidepoint(pos):
+        #checks whether the line object in the cell object is clicked and is triggered before
+        if line.collidepoint(pos) and not cell.line[index]: 
             return index
     
     return -1
 
 def updateCells(screen, cells):
     for cell in cells:
-        # cell.updateLines(screen)
-        cell.displayLineObject(screen)
+        cell.drawCell(screen)
+        cell.updateLines(screen)
     
     return None
 
 def checkLineSelected(cells, pos, players, current_player):
+    #checks line object for each cell is successfully clicked if so change the current player and put the line
     triggered = False
     for cell in cells:
         index = checkLineObjectTriggered(cell, pos)
+
         if index != -1:
             triggered = True
-            print("y")
-            cell.line[index] == current_player[0].color
+            print("Line triggered!")
+            cell.line[index] = current_player[0].color
+
+            cell.checkClaimed(current_player.copy())
+        
     
+    #switch player
     if triggered:
         current_player[0] = players[(current_player[1]+1)%len(players)]
         current_player[1] += 1
@@ -52,9 +60,9 @@ def checkLineSelected(cells, pos, players, current_player):
 def checkEvents(settings, screen, cells, players, current_player):
 
     for event in pygame.event.get():
-            if event.type == pygame.QUIT: #close window if 'x' is clicked
+            if event.type == pygame.QUIT: #close window and program if 'x' is clicked
                 pygame.quit()
-                break
+                sys.exit(0)
 
             if event.type == pygame.MOUSEBUTTONDOWN: #save mouse position in an event of mouse click
                 mousePos = event.pos
