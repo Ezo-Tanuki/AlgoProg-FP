@@ -4,9 +4,8 @@ import sys
 def update_screen(settings, screen, cells):
     
     screen.fill(settings.bg_color)
-    draw_dot(settings, screen)
     updateCells(screen, cells)
-
+    draw_dot(settings, screen)
     pygame.display.flip()
 
 def draw_dot(settings, screen):
@@ -48,7 +47,8 @@ def checkLineSelected(cells, pos, players, current_player):
             print("Line triggered!")
             cell.line[index] = current_player[0].color
 
-            cell.checkClaimed(current_player.copy())
+            if cell.checkClaimed(current_player[0]):
+                current_player[0].score += 1
         
     
     #switch player
@@ -57,7 +57,7 @@ def checkLineSelected(cells, pos, players, current_player):
         current_player[1] += 1
 
 
-def checkEvents(settings, screen, cells, players, current_player):
+def checkEvents(settings, screen, cells, players, current_player, stats):
 
     for event in pygame.event.get():
             if event.type == pygame.QUIT: #close window and program if 'x' is clicked

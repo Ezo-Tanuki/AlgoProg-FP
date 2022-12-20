@@ -3,7 +3,7 @@ class Settings():
         self.screen_width = 600
         self.screen_height = 600
 
-        self.columns = self.rows = 10
+        self.columns = self.rows = 3
         
         self.cellsize = min(100, min(self.screen_width, self.screen_height) // (self.columns+1))
         self.padding_x = (self.screen_width - self.rows * (self.cellsize)) // 2
