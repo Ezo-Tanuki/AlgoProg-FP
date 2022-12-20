@@ -44,11 +44,12 @@ class Cell():
     def checkClaimed(self, current_player):
         for line in self.line:
             if not line:
-                return
+                return False
             
         self.claim = current_player
+        return True
 
     def drawCell(self, screen):
         if self.claim:
-            pygame.draw.rect(screen, self.claim[0].color, self.rect)
+            pygame.draw.rect(screen, self.claim.color, self.rect)
                 
