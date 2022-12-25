@@ -1,13 +1,16 @@
 import pygame
 import sys
 
-def update_screen(settings, screen, cells, players, stats):
+def update_screen(settings, screen, cells, players, stats, button):
     
     screen.fill(settings.bg_color)
     updateCells(screen, cells)
     draw_dot(settings, screen)
     stats.prepScore(players)
     stats.showScore()
+    if not stats.game_active:
+        button.drawButton()
+
     pygame.display.flip()
 
 def draw_dot(settings, screen):
@@ -38,7 +41,7 @@ def updateCells(screen, cells):
     
     return None
 
-def checkLineSelected(cells, pos, players, current_player):
+def checkLineSelected(cells, pos, players, current_player, stats):
     #checks line object for each cell is successfully clicked if so change the current player and put the line
     triggered = False
     for cell in cells:
@@ -51,6 +54,7 @@ def checkLineSelected(cells, pos, players, current_player):
 
             if cell.checkClaimed(current_player[0]):
                 current_player[0].score += 1
+                stats.unclaimed_cells -= 1
         
     
     #switch player
@@ -58,8 +62,10 @@ def checkLineSelected(cells, pos, players, current_player):
         current_player[0] = players[(current_player[1]+1)%len(players)]
         current_player[1] += 1
 
+def checkButtonClicked(button, mousePos):
+    return button.rect.collidepoint(mousePos)
 
-def checkEvents(settings, screen, cells, players, current_player, stats):
+def checkEvents(settings, screen, cells, players, current_player, stats, button):
 
     for event in pygame.event.get():
             if event.type == pygame.QUIT: #close window and program if 'x' is clicked
@@ -68,6 +74,19 @@ def checkEvents(settings, screen, cells, players, current_player, stats):
 
             if event.type == pygame.MOUSEBUTTONDOWN: #save mouse position in an event of mouse click
                 mousePos = event.pos
-                checkLineSelected(cells, mousePos, players, current_player)
+                if stats.game_active:
+                    checkLineSelected(cells, mousePos, players, current_player, stats)
 
-                showTriggeredCell(cells, mousePos)
+                    showTriggeredCell(cells, mousePos)
+
+                    if stats.unclaimed_cells == 0:
+                        stats.game_active = False
+                
+                else:
+                    if checkButtonClicked(button, mousePos):
+                        for cell in cells:
+                            cell.cellReset()
+                        for player in players:
+                            player.resetScore()
+
+                        stats.resetStats()

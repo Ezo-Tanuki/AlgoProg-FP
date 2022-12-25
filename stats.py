@@ -3,7 +3,8 @@ from settings import Settings
 
 class Stats():
     def __init__(self, screen, players, settings = Settings()):
-        self.unclaimed_cells = settings.columns * settings.rows
+        self.total_grid = settings.columns * settings.rows
+        self.unclaimed_cells = self.total_grid
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.settings = settings
@@ -11,7 +12,7 @@ class Stats():
         self.text_color = [(255, 177, 177), (177, 177, 255)]
         self.font = pygame.font.SysFont(None, 48)
 
-        self.game_active = False
+        self.game_active = True
         self.prepScore(players)
 
     def prepScore(self, players):
@@ -30,3 +31,7 @@ class Stats():
     def showScore(self):
         for image, score in zip(self.score_images, self.score_rects):
             self.screen.blit(image, score)
+
+    def resetStats(self):
+        self.unclaimed_cells = self.total_grid
+        self.game_active = True
