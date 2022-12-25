@@ -1,11 +1,13 @@
 import pygame
 import sys
 
-def update_screen(settings, screen, cells):
+def update_screen(settings, screen, cells, players, stats):
     
     screen.fill(settings.bg_color)
     updateCells(screen, cells)
     draw_dot(settings, screen)
+    stats.prepScore(players)
+    stats.showScore()
     pygame.display.flip()
 
 def draw_dot(settings, screen):

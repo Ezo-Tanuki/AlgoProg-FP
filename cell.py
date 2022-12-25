@@ -53,3 +53,6 @@ class Cell():
         if self.claim:
             pygame.draw.rect(screen, self.claim.color, self.rect)
                 
+    def cellReset(self):
+        self.line = [False, False, False, False]
+        self.claim = None

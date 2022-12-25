@@ -17,13 +17,13 @@ def main():
     cells = [Cell(row, column) for row in range(settings.rows)
         for column in range(settings.columns)] #render cell object
     players = (Player((255, 0, 0)), Player((0, 0, 255)))
-    stats = Stats(players)
     current_player = [players[0], 0]
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
+    stats = Stats(screen, players, settings)
     run = True
     print(cells[0].rect)
     while run:
-        gf.update_screen(settings, screen, cells)
+        gf.update_screen(settings, screen, cells, players, stats)
         gf.checkEvents(settings, screen, cells, players, current_player, stats)
         
         
