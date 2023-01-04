@@ -3,9 +3,11 @@ from settings import Settings
 
 
 class Cell():
-    def __init__(self, row, column, s = Settings()):
+    def __init__(self, row, column, screen, s = Settings()):
         self.row = row
         self.column = column
+
+        self.screen = screen
 
         self.index = row * column + column
         self.rect = pygame.Rect(
@@ -31,15 +33,16 @@ class Cell():
         self.line = [False, False, False, False] #up right down left
         self.claim = None #
     
-    def updateLines(self, screen):
+    def updateLines(self):
         for index, side in enumerate(self.line):
             if side:
-                pygame.draw.line(screen, self.line[index], self.corner[index], self.corner[(index+1)% 4], 2)
+                pygame.draw.line(self.screen, self.line[index], self.corner[index], self.corner[(index+1)% 4], 2)
+        #draw lines
 
-    def displayLineObject(self, screen):
+    def displayLineObject(self):
         for side in self.line_object:
             if side:
-                pygame.draw.rect(screen, (0, 0, 0), side)
+                pygame.draw.rect(self.screen, (0, 0, 0), side) #display line object
     
     def checkClaimed(self, current_player):
         for line in self.line:
@@ -48,10 +51,11 @@ class Cell():
             
         self.claim = current_player
         return True
+    #return true if all line has a value
 
-    def drawCell(self, screen):
+    def drawCell(self):
         if self.claim:
-            pygame.draw.rect(screen, self.claim.color, self.rect)
+            pygame.draw.rect(self.screen, self.claim.color, self.rect) #draw cell object
                 
     def cellReset(self):
         self.line = [False, False, False, False]
