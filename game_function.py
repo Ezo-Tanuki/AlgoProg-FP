@@ -3,15 +3,15 @@ import sys
 
 def update_screen(settings, screen, cells, players, stats, button):
     
-    screen.fill(settings.bg_color)
-    updateCells(screen, cells)
-    draw_dot(settings, screen)
-    stats.prepScore(players)
-    stats.showScore()
-    if not stats.game_active:
+    screen.fill(settings.bg_color) #background color
+    updateCells(cells) #update all cell
+    draw_dot(settings, screen) #draw dots
+    stats.prepScore(players) #render score
+    stats.showScore() #show score
+    if not stats.game_active: #show button if game is not active
         button.drawButton()
 
-    pygame.display.flip()
+    pygame.display.flip() #refresh screen
 
 def draw_dot(settings, screen):
 
@@ -28,16 +28,16 @@ def showTriggeredCell(cells, pos):
 
 def checkLineObjectTriggered(cell, pos):
     for index, line in enumerate(cell.line_object):
-        #checks whether the line object in the cell object is clicked and is triggered before
+        #checks whether the line object in the cell object is clicked and is has not been triggered before
         if line.collidepoint(pos) and not cell.line[index]: 
             return index
     
     return -1
 
-def updateCells(screen, cells):
+def updateCells(cells):
     for cell in cells:
-        cell.drawCell(screen)
-        cell.updateLines(screen)
+        cell.drawCell() #draw all cell object
+        cell.updateLines() #draw line
     
     return None
 
@@ -45,18 +45,22 @@ def checkLineSelected(cells, pos, players, current_player, stats):
     #checks line object for each cell is successfully clicked if so change the current player and put the line
     triggered = False
     for cell in cells:
-        index = checkLineObjectTriggered(cell, pos)
-
+        index = checkLineObjectTriggered(cell, pos) 
+        '''
+        check for any line object triggered and return an index from 
+        0-3 (signifying the sides from top, right, bottom, left respectively) 
+        if the line object has not been triggered, otherwise return -1
+        '''
         if index != -1:
             triggered = True
             print("Line triggered!")
             cell.line[index] = current_player[0].color
+            #save the player color as the line color
 
             if cell.checkClaimed(current_player[0]):
-                current_player[0].score += 1
-                stats.unclaimed_cells -= 1
-        
-    
+                current_player[0].score += 1 #add score to the current player
+                stats.unclaimed_cells -= 1 #reduce unclaimed cell by 1
+
     #switch player
     if triggered:
         current_player[0] = players[(current_player[1]+1)%len(players)]
@@ -67,26 +71,29 @@ def checkButtonClicked(button, mousePos):
 
 def checkEvents(settings, screen, cells, players, current_player, stats, button):
 
-    for event in pygame.event.get():
+    for event in pygame.event.get(): #lists all event
             if event.type == pygame.QUIT: #close window and program if 'x' is clicked
                 pygame.quit()
                 sys.exit(0)
 
             if event.type == pygame.MOUSEBUTTONDOWN: #save mouse position in an event of mouse click
                 mousePos = event.pos
-                if stats.game_active:
+                if stats.game_active: #if game in active status start the game
                     checkLineSelected(cells, mousePos, players, current_player, stats)
 
                     showTriggeredCell(cells, mousePos)
 
-                    if stats.unclaimed_cells == 0:
+                    if stats.unclaimed_cells <= 0:
                         stats.game_active = False
                 
-                else:
+                else: #otherwise the game will wait the play button to be clicked
                     if checkButtonClicked(button, mousePos):
-                        for cell in cells:
-                            cell.cellReset()
-                        for player in players:
-                            player.resetScore()
+                        gameReset(cells, players, stats)
 
-                        stats.resetStats()
+def gameReset(cells, players, stats):
+    for cell in cells:
+        cell.cellReset()
+    for player in players:
+        player.resetScore()
+
+    stats.resetStats()
