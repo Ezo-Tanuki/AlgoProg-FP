@@ -17,21 +17,20 @@ def main():
     
     settings = Settings()
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
+
+    grid = [Cell(row, column, screen, settings) for row in range(settings.rows)
+        for column in range(settings.columns)] #create cell object
     
+    players = (Player(RED), Player(BLUE)) #create player object with color
     
-    
-    cells = [Cell(row, column, screen, settings) for row in range(settings.rows)
-        for column in range(settings.columns)] #render cell object
-    players = (Player(RED), Player(BLUE))
-    
+    #set game turn
     current_player = [players[0], 0]
-    
     stats = Stats(screen, players, settings)
     button = Button(screen, "Retry", settings)
     run = True
     while run:
-        gf.update_screen(settings, screen, cells, players, stats, button)
-        gf.checkEvents(settings, screen, cells, players, current_player, stats, button)
+        gf.update_screen(settings, screen, grid, players, stats, button)
+        gf.checkEvents(settings, screen, grid, players, current_player, stats, button)
         
         
         
