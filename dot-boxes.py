@@ -29,7 +29,7 @@ def main():
     button = Button(screen, "Retry", settings)
     run = True
     while run:
-        gf.update_screen(settings, screen, grid, players, stats, button)
+        gf.updateScreen(settings, screen, grid, players, stats, button)
         gf.checkEvents(settings, screen, grid, players, current_player, stats, button)
         
         

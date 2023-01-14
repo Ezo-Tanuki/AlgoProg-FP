@@ -1,19 +1,19 @@
 import pygame
 import sys
 
-def update_screen(settings, screen, grid, players, stats, button):
+def updateScreen(settings, screen, grid, players, stats, button):
     
     screen.fill(settings.bg_color) #background color
 
-    cell_screen = pygame.Surface((screen.get_width(), screen.get_height()))
+    cell_screen = pygame.Surface((screen.get_width(), screen.get_height())) #create seperate screen for the cells
     cell_screen.fill((255, 255, 255))
     cell_screen.set_colorkey((255, 255, 255))
     cell_screen.set_alpha(100)
     updateCells(grid, cell_screen) #update all cell
     
-    screen.blit(cell_screen, (0, 0))
+    screen.blit(cell_screen, (0, 0)) #render the cell screen to the main screen
 
-    draw_dot(settings, screen) #draw dots
+    drawDot(settings, screen) #draw dots
     stats.prepScore() #render score
     stats.showScore() #show score
     if not stats.game_active: #show button if game is not active
@@ -22,7 +22,7 @@ def update_screen(settings, screen, grid, players, stats, button):
 
     pygame.display.update() #refresh screen
 
-def draw_dot(settings, screen):
+def drawDot(settings, screen):
 
     for row in range(settings.rows+1):
         for column in range(settings.columns+1):
@@ -66,6 +66,7 @@ def checkLineSelected(grid, pos, players, current_player, stats):
             cell.line[index] = current_player[0].color
             #save the player color as the line color
 
+            #check if box created
             if cell.checkClaimed(current_player[0]):
                 current_player[0].score += 1 #add score to the current player
                 stats.unclaimed_cells -= 1 #reduce unclaimed cell by 1
