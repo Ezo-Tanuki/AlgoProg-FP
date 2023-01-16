@@ -64,5 +64,5 @@ class Cell():
             
                 
     def cellReset(self) -> None:
-        self.line = [False, False, False, False]
+        self.line = [None, None, None, None]
         self.claim = None
